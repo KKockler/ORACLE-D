@@ -90,6 +90,17 @@ The parameters that define information on the carbon intensity. They include:
 
 TODO
 
+### cluster
+
+The parameters for the cluster include:
+
+| Variables to edit  | Description |
+| :------------: | :------ |
+| cluster_name          | The name of the cluster  |
+| inventory_csv   | The csv file with the inventory file of the cluster | 
+| frequency_csv   | The csv file with frequency dependence of the cluster | 
+| strict   | Whether the program should terminate when a malformed frequency dependence data entry is found or simply log and continue. | 
+
 ## Adding Extra Options
 If you want amend the measurements for each node or add different types of node not yet in the simulation. This needs to be done at the bottom of src/cluster/WorkerNode.py.
 
@@ -102,6 +113,27 @@ To add new machines you will need the following information:
 - HEPScore value for the node at its maximum frequency value
 - (optional) the value of the power displaced of a fully occupied node at its alternative frequency values
 - (optional) the HEPScore value of a fully occupied node at its alternative frequency values
+
+
+## Custom cluster makeup
+While ORACLE-D is shipped with a demo cluster makeup, it is designed to be easily adapted to other datacentres. For that, two datafiles are required: the inventory and the frequency dependence. Both filenames should be specified in config.json.
+
+The format of the file is a csv with the following columns:
+
+| Header entry  | Description |
+| :------------: | :------ |
+| type | The name of the type of nodes  |
+| subtype   | The name of the subtype of nodes. Allows for greater flexibility in naming convention. The full name will be type_subtype | 
+| number_machines   | The number of machines in each subtype | 
+| total_threads   | The number of threads per machine | 
+| total_mem_in_Gb | The amount of memory per machine in Gb |
+| power_min_60d | The minimal power the machine draws, i.e. the idle power |
+| model | The model of the machine (optional) |
+| cpu_model | The cpu of the machine (optional) | 
+| installation_date | The installation date of the machine (optional) | 
+
+The format of the frequency filename is: TODO
+
 
 ## Copyright and License
 Copyright 2023-2026 Deutsches Elektronen Synchrotron DESY and the University of Glasgow
