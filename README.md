@@ -22,7 +22,7 @@ The simulation framework is designed to simulate the amount of energy and carbon
 
 [2] The work that the nodes run is made up jobs that are specified in src/jobs/VOJobFactory.py, and are inserted into the simulation either at the beginning of the simulation or at fixed durations throughout the simulation in src/jobs/JobScheduler.py.
 
-[3] The different ways that the simulation can be run is a setting in src/simulation/Simulation.py that changes the frequency the nodes are run at and at what times of day this is done. Current running options are
+[3] The different saving policies that the simulation can be run with are specified via a setting in config.json. This policy changes the frequency the nodes are run at and at what times of day this is done. Current running options are
 
 | Running Flag  | Description |
 | :------------: | :------ |
@@ -64,17 +64,31 @@ python3 src/Main.py
 
 The default running mode is to run 40,000 'ATLAS' and 10,000 'LHCb' jobs on the on the DESY Grid compute cluster from 2024-01-16 16:00 without any special running conditions. This could run for a couple of minutes and produce a log output, and the file RF20PMTest-50000LHCJobs-Base.txt with the summary of the output. The information of grid carbon intensity is taken from data/de_carbon_Intensity_2024_15min.csv. This can be compared to the file that exists already in the folder which takes the same job mix started at the same time but clocks down the machines when the carbon intensity of the grid is forecast in the next time-step to be high. On line 63 of src/simulation/simulation.py, you can see 'high' for the German grid is taken to be 400 gCO2e/kWh and 200 gCO2e/kWh if you want to run on the UK electrical grid.
 
-## Making Small edits
-If you want to edit the parameters of the simulation, you will need to change them from src/simulation/Simulation.py. The following are parameters that can be changed.
+## Configuration
+The simulation is configured via the config.json file. In there, all relevant parameters are specified. They are split into several sections dealing with the different parts of the code.
+
+### Simulation
+The parameters that can be changed for the simulation include:
 
 | Variables to edit  | Description |
 | :------------: | :------ |
 | desiredStartTime          | The time at which the simulation starts. Leaving this black defaults to clock time  |
-| self._simulation_length   | The maximum duration that the will simulation will run for     | 
-| self._CIntendata          | The carbon intensity data that is fed into the simulation via the data/ subdirectory |
-| self._cluster             | Defines the type and number of worker nodes that form the cluster, the carbon intensity data to use, and flag of how you want to run the cluster during the simulation |
-| self._jobScheduler        |  Defines the type and number of jobs to be run on the cluster. Can add jobs into the queue at the start of the simulation, and at regular intervals during the simulation |
-| self._jobdescript         | The name of the output text file for the simulation   |
+| simulation_length   | The maximum duration that the will simulation will run for in seconds | 
+| timestep   | The timestep the simulation does in between each update in seconds | 
+| savings_policy   | The savings policy specified in an earlier section. The options are "None", "cd", "cdcd", "cd1721", "cdcd1721", and "highforecast". | 
+
+### carbon_intensity
+The parameters that define information on the carbon intensity. They include:
+
+| Variables to edit  | Description |
+| :------------: | :------ |
+| folder          | The folder where the carbon intensity data is stored  |
+| filename   | The filename of the carbon intensity data | 
+| high_CI_threshold   | The threshold of what is considered a high carbon intensity in gCO2e/kWh | 
+
+### jobs
+
+TODO
 
 ## Adding Extra Options
 If you want amend the measurements for each node or add different types of node not yet in the simulation. This needs to be done at the bottom of src/cluster/WorkerNode.py.
