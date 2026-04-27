@@ -92,7 +92,7 @@ class Simulation():
                                                         WorkerNode_DESYT31:10, 
                                                         WorkerNode_DESYT382:77}, 
                                                         self._CIntendata, 
-                                                        'none', 
+                                                        config["Simulation"]["savings_policy"], 
                                                         self.CIThresholdValue) # Starting DESY
 
 
