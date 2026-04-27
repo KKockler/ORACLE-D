@@ -23,13 +23,19 @@
 
 from simulation.Simulation import Simulation
 from util import Logging
+import json
+import os
 
 
 logger = Logging.get_logger()
 
 if __name__ == '__main__':
     Logging.configure_logger(logger)
-    sim = Simulation()
+    project_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+    with open(project_dir + '/config.json') as f:
+        config = json.load(f)
+
+    sim = Simulation(config)
     sim.start()
     #sim2 = Simulation('eveningclock') # Clock down the node at 5pm and up at 9pm
     #sim2.start()

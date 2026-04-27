@@ -23,12 +23,12 @@ logger = Logging.get_logger()
 
 class Simulation():
 
-    def __init__(self):
+    def __init__(self, config):
         
-        self.desiredStartTime             = '2024-01-16 16:00' # STEVE '2018-01-01 00:30' : Starts at the simulation at a set time can be set to any time you wish in the format '2024-01-12 15:00'
+        self.desiredStartTime             = config["Simulation"]["desired_starttime"] # STEVE '2018-01-01 00:30' : Starts at the simulation at a set time can be set to any time you wish in the format '2024-01-12 15:00'
         self._simulation_time             = SimulationTime(self.desiredStartTime) #If you want this to be set to the current time, set desiredStartTime to None
-        self._simulation_length           = 7*24*3600 # Desired maximum length of the simulation in seconds. (For one year 365*24*3600)
-        self._simulation_time._timestep_seconds = 600 # Simulation time step in seconds. #Steve was using 200
+        self._simulation_length           = config["Simulation"]["simulation_length"] # Desired maximum length of the simulation in seconds. (For one year 365*24*3600)
+        self._simulation_time._timestep_seconds = config["Simulation"]["timestep"] # Simulation time step in seconds. #Steve was using 200
         # Finds the half-hour time segment to which the start of the simulation belongs and the one after the end time.
         self._simulation_starting_segment = self._simulation_time.find_hh_segment(self._simulation_time._time)
         self._simulation_maxfinal_segment = self._simulation_time.find_hh_segment(self._simulation_time._time + timedelta(seconds=self._simulation_length), 'next')
@@ -40,9 +40,8 @@ class Simulation():
         # Importing average data about the Carbon Intensity of the whole UK grid for the maxumum duration of the simulation.
         # Carbon Intensity data is in gCO2/kWh.
         logger.info('Loading in Carbon Intensity Data')
-        datapath = 'data/'
-        # datafile = r'gb_carbon_intensity_2023.csv' # or r'gb_carbon_intensity.csv'
-        datafile = r'de_carbon_Intensity_2024_15min.csv' # or r'gb_carbon_intensity.csv'
+        datapath = config["carbon_intensity"]["folder"]
+        datafile = config["carbon_intensity"]["filename"]
         #Convert start and end segment datetimes to format found in datafile. 
         self.datastart_str = datetime.strftime(self._simulation_starting_segment, '%Y-%m-%dT%H:%M:%S')
         self.datafinal_str = datetime.strftime(self._simulation_maxfinal_segment, '%Y-%m-%dT%H:%M:%S')
@@ -69,7 +68,7 @@ class Simulation():
                     
         self._CIntendata = linesofimport
         
-        self.CIThresholdValue = 400 #  200gCO2e/kWh - This roughly corresponds to what is labelled 'high' in the UK. For Germany I'll put this at 400
+        self.CIThresholdValue = config["carbon_intensity"]["high_CI_threshold"] #  200gCO2e/kWh - This roughly corresponds to what is labelled 'high' in the UK. For Germany I'll put this at 400
 
         # Create the cluster {WorkerNode[unstantiated WN of type WorkerNode]:amount[integer]}
         # Types of nodes you can currently use are {WorkerNode_h16, WorkerNode_h17, WorkerNode_d20, WorkerNode_d21, WorkerNode_d22, WorkerNode_a23},
