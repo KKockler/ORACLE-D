@@ -87,8 +87,13 @@ The parameters that define information on the carbon intensity. They include:
 | high_CI_threshold   | The threshold of what is considered a high carbon intensity in gCO2e/kWh | 
 
 ### jobs
+In this part of the config, the type of jobs that the simpulation will run are specified. The relevant parameters are:
 
-TODO
+| Variables to edit  | Description |
+| :------------: | :------ |
+| initial_mix          | The initial mix of jobs submitted to the cluster. The format is a dictionary with the type of jobs as key and the number as value. Currently implemented are the jobtypes "ATLAS", "LHCb" and "GridPP". With any other name, a basic job will be run. |
+| regular_incoming_mix   | A mix of jobs that gets submitted at regular intervals. The format is the same as initial_mix. | 
+| incoming_timestep   | The timestep between job submissions | 
 
 ## Adding Extra Options
 If you want amend the measurements for each node or add different types of node not yet in the simulation. This needs to be done at the bottom of src/cluster/WorkerNode.py.
