@@ -117,7 +117,12 @@ class Simulation():
         # Format for initial jobs is a dictionary of {'VO1':jobs, 'VO2':jobs, [...]}
         # Format for regular jobs is a list  of lists of a dictionary of [[{'VO1':jobs per X seconds, 'VO2':jobs per X seconds, [...]}, X], [....] ]
         # self._jobScheduler = JobScheduler(self._simulation_time, self._cluster, {'GridPP':10} , None)
-        self._jobScheduler = JobScheduler(self._simulation_time, self._cluster, {'ATLAS':40000,'LHCb':10000} , None)
+        if config["jobs"]["regular_incoming_mix"] == {}:
+            jobs_refill = None
+        else:
+            jobs_refill = [[config["jobs"]["regular_incoming_mix"], config["jobs"]["incoming_timestep"]]]
+        print(jobs_refill)
+        self._jobScheduler = JobScheduler(self._simulation_time, self._cluster, config["jobs"]["initial_mix"] , jobs_refill)
         # self._jobScheduler = JobScheduler(self._simulation_time, self._cluster, {'GridPP':100000}, [[{'GridPP':250}, 3600*10]])
         self._jobdescript  = "RF20PMTest-50000LHCJobs-Base" # Add here what kind of jobs you are running.
         self._jobdescript  = "RF20PMTest-50000LHCJobs-Base" # Add here what kind of jobs you are running.
