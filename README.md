@@ -92,7 +92,7 @@ In this part of the config, the type of jobs that the simpulation will run are s
 | Variables to edit  | Description |
 | :------------: | :------ |
 | initial_mix          | The initial mix of jobs submitted to the cluster. The format is a dictionary with the type of jobs as key and the number as value. Currently implemented are the jobtypes "ATLAS", "LHCb" and "GridPP". With any other name, a basic job will be run. |
-| regular_incoming_mix   | A mix of jobs that gets submitted at regular intervals. The format is the same as initial_mix. | 
+| regular_incoming_mix   | A mix of jobs that gets submitted at regular intervals. The format is the same as initial_mix. If left empty, no jobs will be refilled. | 
 | incoming_timestep   | The timestep between job submissions | 
 
 ## Adding Extra Options
