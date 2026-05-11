@@ -25,6 +25,7 @@ from simulation.Simulation import Simulation
 from util import Logging
 import json
 import os
+import logging
 
 
 logger = Logging.get_logger()
@@ -38,7 +39,11 @@ if __name__ == '__main__':
     verbosity_raw = output_cfg.get("verbosity")
     config["output"]["verbosity"] = Logging.normalize_verbosity(verbosity_raw)
 
-    Logging.configure_logger(logger)
+    if config["output"].get("debug", False):
+        logging_level = logging.DEBUG
+    else:
+        logging_level = logging.INFO
+    Logging.configure_logger(logger, logging_level)
 
     if verbosity_raw != config["output"]["verbosity"]:
         logger.warning(f"Invalid verbosity value '{verbosity_raw}', defaulting to 'high'")
