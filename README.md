@@ -101,7 +101,7 @@ This part controls how much information is written to the logfile in the `logs/`
 | Variables to edit  | Description |
 | :------------: | :------ |
 | verbosity | Controls INFO-level logging detail. Valid values are `"low"`, `"medium"`, and `"high"`. |
-| debug | Reserved for future use. It is currently not used to change logging behavior. |
+| debug | Controls the logging level. If set to true, debug messages are logged alongside information, warnings and errors. |
 
 Verbosity behavior:
 - `low`: only high-level lifecycle messages (for example simulation creation) are logged.
