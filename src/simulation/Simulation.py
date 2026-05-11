@@ -26,12 +26,14 @@ class Simulation():
     def __init__(self, config):
         
         self.desiredStartTime             = config["Simulation"]["desired_starttime"] # STEVE '2018-01-01 00:30' : Starts at the simulation at a set time can be set to any time you wish in the format '2024-01-12 15:00'
-        self._simulation_time             = SimulationTime(self.desiredStartTime) #If you want this to be set to the current time, set desiredStartTime to None
+        self._simulation_time             = SimulationTime(config, self.desiredStartTime) #If you want this to be set to the current time, set desiredStartTime to None
         self._simulation_length           = config["Simulation"]["simulation_length"] # Desired maximum length of the simulation in seconds. (For one year 365*24*3600)
         self._simulation_time._timestep_seconds = config["Simulation"]["timestep"] # Simulation time step in seconds. #Steve was using 200
         # Finds the half-hour time segment to which the start of the simulation belongs and the one after the end time.
         self._simulation_starting_segment = self._simulation_time.find_hh_segment(self._simulation_time._time)
         self._simulation_maxfinal_segment = self._simulation_time.find_hh_segment(self._simulation_time._time + timedelta(seconds=self._simulation_length), 'next')
+
+        self._verbosity = config["output"]["verbosity"]
 
         print('Setting up simulation.')
         print('Start date: ' + self._simulation_time._start_time.strftime("%d/%m/%y"))
@@ -39,7 +41,8 @@ class Simulation():
                
         # Importing average data about the Carbon Intensity of the whole UK grid for the maxumum duration of the simulation.
         # Carbon Intensity data is in gCO2/kWh.
-        logger.info('Loading in Carbon Intensity Data')
+        if self._verbosity in ["medium", "high"]:
+            logger.info('Loading in Carbon Intensity Data')
         datapath = config["carbon_intensity"]["folder"]
         datafile = config["carbon_intensity"]["filename"]
         #Convert start and end segment datetimes to format found in datafile. 
@@ -82,7 +85,7 @@ class Simulation():
         # self._cluster = Cluster(self._simulation_time, {WorkerNode_d20:40, WorkerNode_d21:32, WorkerNode_d22:36, WorkerNode_d24:17}, self._CIntendata, 'none') # Future 1
         # self._cluster = Cluster(self._simulation_time, {WorkerNode_d20:40, WorkerNode_d21:32, WorkerNode_d22:36, WorkerNode_a24:17}, self._CIntendata, 'none') # Future 2
         # DESY
-        self._cluster = Cluster(self._simulation_time, {WorkerNode_DESYT3:40,
+        self._cluster = Cluster(config, self._simulation_time, {WorkerNode_DESYT3:40,
                                                         WorkerNode_DESYT4:76, 
                                                         WorkerNode_DESYT11:41, 
                                                         WorkerNode_DESYT13:24, 
@@ -105,7 +108,7 @@ class Simulation():
         print('CIThresholdValue: ' + str(self.CIThresholdValue))
         
         # Class to record statistics
-        self._datalogger = DataLogger()
+        self._datalogger = DataLogger(config)
         self._cluster.set_datalogger_handlers(self._datalogger.job_submit, 
                                               self._datalogger.job_start, 
                                               self._datalogger.job_finish,
@@ -121,10 +124,9 @@ class Simulation():
             jobs_refill = None
         else:
             jobs_refill = [[config["jobs"]["regular_incoming_mix"], config["jobs"]["incoming_timestep"]]]
-        print(jobs_refill)
+
         self._jobScheduler = JobScheduler(self._simulation_time, self._cluster, config["jobs"]["initial_mix"] , jobs_refill)
         # self._jobScheduler = JobScheduler(self._simulation_time, self._cluster, {'GridPP':100000}, [[{'GridPP':250}, 3600*10]])
-        self._jobdescript  = "RF20PMTest-50000LHCJobs-Base" # Add here what kind of jobs you are running.
         self._jobdescript  = "RF20PMTest-50000LHCJobs-Base" # Add here what kind of jobs you are running.
 
 
@@ -141,7 +143,8 @@ class Simulation():
                 print(' per ' + str(secs/3600) +  ' hours', end='')
         print ()
         
-        logger.info('Created simulation')
+        if self._verbosity in ["low", "medium", "high"]:
+            logger.info('Created simulation')
         print(f'Simulation Started. Good Luck')
 
 
@@ -169,8 +172,9 @@ class Simulation():
                 realtottime = datetime.now() - self._simulation_time.get_origin_datetime() # Real Time
                 self._datalogger.print_summary(True, self._jobdescript, simtottime.total_seconds(), self._simulation_time.get_timestep(), realtottime.total_seconds())
                 
-                logger.info(f'No more jobs!')
-                logger.info(f'Ending simulation at {self._simulation_time.get_current_datetime()}')
+                if self._verbosity in ["medium", "high"]:
+                    logger.info(f'No more jobs!')
+                    logger.info(f'Ending simulation at {self._simulation_time.get_current_datetime()}')
                 print(f'Simulation Finished. Check logs directory for output')
                 sys.exit(0)
             
@@ -179,8 +183,9 @@ class Simulation():
                 realtottime = datetime.now() - self._simulation_time.get_origin_datetime() # Real Time
                 self._datalogger.print_summary(True, self._jobdescript, simtottime.total_seconds(), self._simulation_time.get_timestep(), realtottime.total_seconds())
                 
-                logger.info(f'You have been running for a week! Time to stop')
-                logger.info(f'Ending simulation at {self._simulation_time.get_current_datetime()}')
+                if self._verbosity in ["medium", "high"]:
+                    logger.info(f'You have been running for a week! Time to stop')
+                    logger.info(f'Ending simulation at {self._simulation_time.get_current_datetime()}')
                 print(f'Simulation Finished. Check logs directory for output')
                 sys.exit(0)    
 

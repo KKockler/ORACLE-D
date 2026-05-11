@@ -30,13 +30,20 @@ import os
 logger = Logging.get_logger()
 
 if __name__ == '__main__':
-    Logging.configure_logger(logger)
     project_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
     with open(project_dir + '/config.json') as f:
         config = json.load(f)
+
+    output_cfg = config.setdefault("output", {})
+    verbosity_raw = output_cfg.get("verbosity")
+    config["output"]["verbosity"] = Logging.normalize_verbosity(verbosity_raw)
+
+    Logging.configure_logger(logger)
+
+    if verbosity_raw != config["output"]["verbosity"]:
+        logger.warning(f"Invalid verbosity value '{verbosity_raw}', defaulting to 'high'")
 
     sim = Simulation(config)
     sim.start()
     #sim2 = Simulation('eveningclock') # Clock down the node at 5pm and up at 9pm
     #sim2.start()
-
