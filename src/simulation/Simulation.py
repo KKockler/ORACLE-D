@@ -144,8 +144,45 @@ class Simulation():
         print ()
         
         if self._verbosity in ["low", "medium", "high"]:
-            logger.info('Created simulation')
+            logger.info('Created simulation with parameters:\n%s', self._format_simulation_parameters(datapath, datafile))
         print(f'Simulation Started. Good Luck')
+
+
+    def _format_simulation_parameters(self, carbon_data_path, carbon_data_file):
+        cluster_inventory = []
+        for node, quantity in self._cluster._worker_node_inventory.items():
+            worker_node = node(self._simulation_time)
+            cluster_inventory.append(f'{worker_node.hostname}: {quantity}')
+
+        regular_jobs = 'none'
+        if self._jobScheduler._regular_incoming_jobs:
+            regular_jobs = ', '.join(
+                f'{vo}: {jobs} per {secs} seconds'
+                for job_mix, secs in self._jobScheduler._regular_incoming_jobs
+                for vo, jobs in job_mix.items()
+            )
+
+        return '\n'.join([
+            f'  start_time: {self._simulation_time.get_start_datetime()}',
+            f'  max_end_time: {self._simulation_time.get_start_datetime() + timedelta(seconds=self._simulation_length)}',
+            f'  simulation_length_seconds: {self._simulation_length}',
+            f'  timestep_seconds: {self._simulation_time.get_timestep()}',
+            f'  savings_policy: {self._cluster._energy_saving_try}',
+            f'  carbon_intensity_file: {carbon_data_path}{carbon_data_file}',
+            f'  carbon_intensity_segments: {self.datastart_str} to {self.datafinal_str}',
+            f'  high_CI_threshold: {self.CIThresholdValue}',
+            f'  worker_nodes: {self._cluster.get_number_of_nodes()}',
+            f'  worker_cores: {self._cluster.get_number_of_cores()}',
+            f'  worker_node_inventory: {", ".join(cluster_inventory)}',
+            f'  initial_jobs: {self._format_job_mix(self._jobScheduler._inital_job_mix)}',
+            f'  regular_incoming_jobs: {regular_jobs}',
+        ])
+
+
+    def _format_job_mix(self, job_mix):
+        if not job_mix:
+            return 'none'
+        return ', '.join(f'{vo}: {jobs}' for vo, jobs in job_mix.items())
 
 
     def start(self):
