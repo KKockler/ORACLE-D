@@ -8,6 +8,7 @@
 # ===========================================================================
 
 import sys
+import os
 from datetime import datetime, timedelta
 
 from cluster.Cluster import Cluster
@@ -144,8 +145,18 @@ class Simulation():
         print ()
         
         if self._verbosity in ["low", "medium", "high"]:
-            logger.info('Created simulation with parameters:\n%s', self._format_simulation_parameters(datapath, datafile))
+            simulation_parameters = self._format_simulation_parameters(datapath, datafile)
+            logger.info('Created simulation with parameters:\n%s', simulation_parameters)
+            self._write_simulation_parameters(simulation_parameters)
         print(f'Simulation Started. Good Luck')
+
+
+    def _write_simulation_parameters(self, simulation_parameters):
+        run_dir = self._datalogger._run_dir
+        if run_dir:
+            with open(os.path.join(run_dir, 'parameters.txt'), 'w') as outfile:
+                outfile.write(simulation_parameters)
+                outfile.write('\n')
 
 
     def _format_simulation_parameters(self, carbon_data_path, carbon_data_file):

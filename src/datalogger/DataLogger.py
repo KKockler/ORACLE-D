@@ -8,7 +8,7 @@
 # ===========================================================================
 
 from util import Logging
-import datetime
+import os
 
 logger = Logging.get_logger()
 
@@ -42,6 +42,7 @@ class DataLogger():
 
         # verbosity
         self._verbosity = config["output"]["verbosity"]
+        self._run_dir = config["output"].get("run_dir", "logs")
 
 
     def job_submit(self, job):
@@ -121,8 +122,8 @@ class DataLogger():
         print(f'')
         
         if summary_file == True:
-            tag = '{:%Y%m%d-%H%M}'.format(datetime.datetime.now())
-            with open( 'logs/'+additional_description+'.txt', 'a') as outfile:
+            summary_path = os.path.join(self._run_dir, 'summary.txt')
+            with open(summary_path, 'a') as outfile:
                 outfile.write(f'========\n')
                 outfile.write(f'Summary\n')
                 outfile.write(f'========\n')
@@ -150,5 +151,3 @@ class DataLogger():
                 outfile.write(f'Peaktime CO2e emissions percentage : {self._peaktime_carbon_consumed/self._total_carbon_consumed*100:.3f} %\n')      
                 outfile.write(f'\n')
                 outfile.close()
-
-
