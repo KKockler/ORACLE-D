@@ -7,11 +7,9 @@ The Optimised Resource Analysis and Carbon Legacy Estimator for Data centres (OR
 Version 0.1.0 has been presented at the 2024 HEPiX Spring Workshop in Paris.   
 Version 1.0.0: Antares has been tagged for release on 31st March 2026.
 
-| Latest Release | DOI link |
+| Release Name | DOI link |
 | :------------: | :------: |
-| Antares ||
-
-
+| Antares        | <a href="https://doi.org/10.5281/zenodo.20720295"><img src="https://zenodo.org/badge/1197685978.svg" alt="v1.0.0"></a>|
 
 ## Current Functionality
 The simulation framework is designed to simulate the amount of energy and carbon used* when a computing site[1] performing work[2] is run in different ways[3]. The simulation is modular so [1],[2] and[3] are easily editable. 
