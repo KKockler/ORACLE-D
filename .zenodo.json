@@ -1,0 +1,29 @@
+{
+    "creators": [
+        {
+            "name": "Spiteri, Dwayne",
+            "orcid": "0000-0002-9226-2539",
+            "affiliation": "DESY"
+        },
+        {
+            "name": "Stewart, Gordon",
+            "affiliation": "University of Glasgow"
+        }
+    ],
+    "title": "The Optimised Resource Analysis and Carbon Legacy Estimator for Data centres (ORACLE-D) Framework",
+    "access_right": "open",
+    "keywords": [
+        "computer science",
+        "green computing",
+        "simulation"
+    ],
+    "doi": "10.5281/zenodo.19354230 ",
+    "license": "apache-2.0",
+    "upload_type": "software",
+    "grants": [
+        {"id": "101131850"}
+    ],
+    "communities": [
+        {"identifier": "RF2.0"}
+    ]
+}
