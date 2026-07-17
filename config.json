@@ -13,9 +13,9 @@
     },
   
     "cluster" : {
-        "cluster_name" : "GRID",
-        "inventory_csv" : "data/cluster/e-machinegroups_inventory_GRID.csv",
-        "frequency_csv" : "data/cluster/f-frequency_dependence.csv",
+        "cluster_name" : "DEFAULT",
+        "inventory_csv" : "data/cluster/default-machinegroups_inventory.csv",
+        "frequency_csv" : "data/cluster/default-frequency_dependence.csv",
         "strict" : false
     },
 
