@@ -86,10 +86,12 @@ class Simulation():
         # self._cluster = Cluster(self._simulation_time, {WorkerNode_d20:40, WorkerNode_d21:32, WorkerNode_d22:36, WorkerNode_d24:17}, self._CIntendata, 'none') # Future 1
         # self._cluster = Cluster(self._simulation_time, {WorkerNode_d20:40, WorkerNode_d21:32, WorkerNode_d22:36, WorkerNode_a24:17}, self._CIntendata, 'none') # Future 2
         # DESY
-        self._cluster = Cluster(self._simulation_time, inventory,
-                                                        self._CIntendata, 
-                                                        config["Simulation"]["savings_policy"], 
-                                                        self.CIThresholdValue) # Starting DESY
+        self._cluster = Cluster(config,
+                                self._simulation_time,
+                                inventory,
+                                self._CIntendata,
+                                config["Simulation"]["savings_policy"],
+                                self.CIThresholdValue) # Starting DESY
 
 
         print('Cluster: ', end='')
