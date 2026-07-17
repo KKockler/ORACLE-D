@@ -17,7 +17,7 @@ class DataLogger():
 
     # This should also write to disk...
 
-    def __init__(self): 
+    def __init__(self, config): 
         self._jobs_submitted = 0
         self._jobs_started = 0
         self._jobs_finished = 0
@@ -40,18 +40,24 @@ class DataLogger():
         self._avg_carbon_per_job = 0
         self._avg_occupancy = 0
 
+        # verbosity
+        self._verbosity = config["output"]["verbosity"]
+
+
     def job_submit(self, job):
         pass
 
 
     def job_start(self, job, worker_node):
-        logger.info(f'Starting job {job} on node {worker_node.hostname} at {job.start_time}')
+        if self._verbosity in ["high"]:
+            logger.info(f'Starting job {job} on node {worker_node.hostname} at {job.start_time}')
         self._jobs_started += 1
         self._jobs_total_cores_used += job.cores_req
 
 
     def job_finish(self, job, worker_node):
-        logger.info(f'Job {job} finished on node {worker_node.hostname} at {job.end_time}')
+        if self._verbosity in ["high"]:
+            logger.info(f'Job {job} finished on node {worker_node.hostname} at {job.end_time}')
         self._jobs_finished += 1
         self._cumulative_wallclock_time += job.duration
         # Yes, Sam, I know... ;-)

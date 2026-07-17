@@ -11,6 +11,8 @@ import datetime
 import logging
 import os
 
+VALID_VERBOSITY_LEVELS = ("low", "medium", "high")
+
 
 def __get_fn_log():
     dir_logs = os.path.join(os.getcwd(), 'logs')
@@ -27,6 +29,15 @@ def get_logger():
 def configure_logger(logger, level = logging.INFO):
     logger.setLevel(level)
 
+    # Avoid duplicate lines if configure_logger() is called more than once.
+    logger.handlers = []
     handler = logging.FileHandler(__get_fn_log())
     handler.setFormatter(logging.Formatter('%(asctime)s  %(levelname)s  [%(filename)s:%(funcName)s]  %(message)s'))
     logger.addHandler(handler)
+
+
+def normalize_verbosity(raw_verbosity, default="high"):
+    verbosity = str(raw_verbosity) if raw_verbosity is not None else default
+    if verbosity not in VALID_VERBOSITY_LEVELS:
+        return default
+    return verbosity

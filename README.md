@@ -95,6 +95,21 @@ In this part of the config, the type of jobs that the simpulation will run are s
 | regular_incoming_mix   | A mix of jobs that gets submitted at regular intervals. The format is the same as initial_mix. If left empty, no jobs will be refilled. | 
 | incoming_timestep   | The timestep between job submissions | 
 
+### output
+This part controls how much information is written to the logfile in the `logs/` directory.
+
+| Variables to edit  | Description |
+| :------------: | :------ |
+| verbosity | Controls INFO-level logging detail. Valid values are `"low"`, `"medium"`, and `"high"`. |
+| debug | Controls the logging level. If set to true, debug messages are logged alongside information, warnings and errors. |
+
+Verbosity behavior:
+- `low`: only high-level lifecycle messages (for example simulation creation) are logged.
+- `medium`: includes major progress messages (for example loading data and simulation end-condition messages).
+- `high`: includes the most detailed INFO logs, including per-job start/finish entries from the data logger.
+
+If `output.verbosity` is not one of `low`, `medium`, or `high`, ORACLE-D logs a warning and defaults to `high`.
+
 ## Adding Extra Options
 If you want amend the measurements for each node or add different types of node not yet in the simulation. This needs to be done at the bottom of src/cluster/WorkerNode.py.
 
@@ -136,4 +151,3 @@ The measurements used here to catagorise the different types of server come from
 The carbon intensity data for the UK is taken from the [UK National Grid ESO](https://www.nationalgrideso.com/data-portal/national-carbon-intensity-forecast/national_carbon_intensity_forecast) interpolated to fill in gaps in the data and can be downloaded from [here](https://www.nationalgrideso.com/data-portal/national-carbon-intensity-forecast/national_carbon_intensity_forecast) and for Germany is taken from [Agorameter](https://www.agora-energiewende.de/daten-tools/agorameter) and [Green Grid Compass](https://www.greengrid-compass.eu/).
 
 This code was partially written for the RF2.0 project that has received funding from the European Union’s Horizon Europe research and innovation programme under grant agreement No. 101131850 and from the Swiss State Secretariat for Education Research and Innovation (SERI)
-
