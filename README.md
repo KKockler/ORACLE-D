@@ -4,11 +4,13 @@
 The Optimised Resource Analysis and Carbon Legacy Estimator for Data centres (ORACLE-D) Framework is a framework for simulating different types of compute nodes, seeing how they deal with incoming jobs, and how much power consumed/carbon emitted in doing so. The initial idea was to use this to investigate how energy consumption and/or carbon usage can be reduced an average Grid computing site. This software was written in Python3
 
 ## Project status
-Version 0.1.0 has been presented at the 2024 HEPiX Spring Workshop in Paris.   
+Version 1.1.0: Betelgeuse has been tagged for release on 17th July 2026.
 Version 1.0.0: Antares has been tagged for release on 31st March 2026.
+Version 0.1.0 has been presented at the 2024 HEPiX Spring Workshop in Paris.   
 
 | Release Name | DOI link |
 | :------------: | :------: |
+| Betelgeuse     |          |
 | Antares        | <a href="https://doi.org/10.5281/zenodo.20720295"><img src="https://zenodo.org/badge/1197685978.svg" alt="v1.0.0"></a>|
 
 ## Current Functionality
