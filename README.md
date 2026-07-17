@@ -177,7 +177,7 @@ See the License for the specific language governing permissions and
 limitations under the License.
 
 ## Contributors
-Dwayne Spiteri and Gordon Stewart
+Dwayne Spiteri, Gordon Stewart and Konrad Kockler
 
 
 ## Acknowledgements
