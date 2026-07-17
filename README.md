@@ -62,7 +62,7 @@ To run this simulation in this folder type the command:
 python3 src/Main.py
 ```
 
-The default running mode is to run 40,000 'ATLAS' and 10,000 'LHCb' jobs on the on the DESY Grid compute cluster from 2024-01-16 16:00 without any special running conditions. This could run for a couple of minutes and produce a log output, and the file RF20PMTest-50000LHCJobs-Base.txt with the summary of the output. The information of grid carbon intensity is taken from data/de_carbon_Intensity_2024_15min.csv. This can be compared to the file that exists already in the folder which takes the same job mix started at the same time but clocks down the machines when the carbon intensity of the grid is forecast in the next time-step to be high. On line 63 of src/simulation/simulation.py, you can see 'high' for the German grid is taken to be 400 gCO2e/kWh and 200 gCO2e/kWh if you want to run on the UK electrical grid.
+The default running mode is to run 50,000 'GridPP' jobs on the default DESY Grid compute cluster from 2024-01-16 16:00 without any special running conditions at medium verbosity. This could run for a couple of minutes and produce a log output, and the folder logs/runs/[DATE]_RF20PMTest-50000GridPP-Base with the summary of the output. The information of grid carbon intensity is taken from data/de_carbon_Intensity_2024_15min.csv. This can be compared to the folder that exists already in the folder which takes the same job mix started at the same time. If the two summaries match, this test was run successfully.
 
 ## Configuration
 The simulation is configured via the config.json file. In there, all relevant parameters are specified. They are split into several sections dealing with the different parts of the code.
