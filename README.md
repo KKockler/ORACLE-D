@@ -99,7 +99,7 @@ The parameters for the cluster include:
 | cluster_name          | The name of the cluster  |
 | inventory_csv   | The csv file with the inventory file of the cluster | 
 | frequency_csv   | The csv file with frequency dependence of the cluster | 
-| strict   | Whether the program should terminate when a malformed frequency dependence data entry is found or simply log and continue. | 
+| strict   | Whether the program should terminate when an incomplete frequency dependence data entry is found or simply log and continue. | 
 
 ## Adding Extra Options
 If you want amend the measurements for each node or add different types of node not yet in the simulation. This needs to be done at the bottom of src/cluster/WorkerNode.py.
