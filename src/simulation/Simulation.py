@@ -7,12 +7,12 @@
 #    files in the main directory 
 # ===========================================================================
 
+
 import sys
 import os
 from datetime import datetime, timedelta
 
 from cluster.Cluster import Cluster
-from cluster.WorkerNode import *
 from datalogger.DataLogger import DataLogger
 from jobs.JobScheduler import JobScheduler
 from simulation.Time import SimulationTime
@@ -24,7 +24,7 @@ logger = Logging.get_logger()
 
 class Simulation():
 
-    def __init__(self, config):
+    def __init__(self, config, inventory):
         
         self.desiredStartTime             = config["Simulation"]["desired_starttime"] # STEVE '2018-01-01 00:30' : Starts at the simulation at a set time can be set to any time you wish in the format '2024-01-12 15:00'
         self._simulation_time             = SimulationTime(config, self.desiredStartTime) #If you want this to be set to the current time, set desiredStartTime to None
@@ -86,15 +86,7 @@ class Simulation():
         # self._cluster = Cluster(self._simulation_time, {WorkerNode_d20:40, WorkerNode_d21:32, WorkerNode_d22:36, WorkerNode_d24:17}, self._CIntendata, 'none') # Future 1
         # self._cluster = Cluster(self._simulation_time, {WorkerNode_d20:40, WorkerNode_d21:32, WorkerNode_d22:36, WorkerNode_a24:17}, self._CIntendata, 'none') # Future 2
         # DESY
-        self._cluster = Cluster(config, self._simulation_time, {WorkerNode_DESYT3:40,
-                                                        WorkerNode_DESYT4:76, 
-                                                        WorkerNode_DESYT11:41, 
-                                                        WorkerNode_DESYT13:24, 
-                                                        WorkerNode_DESYT16:20, 
-                                                        WorkerNode_DESYT17:10, 
-                                                        WorkerNode_DESYT26:12, 
-                                                        WorkerNode_DESYT31:10, 
-                                                        WorkerNode_DESYT382:77}, 
+        self._cluster = Cluster(self._simulation_time, inventory,
                                                         self._CIntendata, 
                                                         config["Simulation"]["savings_policy"], 
                                                         self.CIThresholdValue) # Starting DESY

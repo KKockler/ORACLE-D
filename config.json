@@ -11,15 +11,20 @@
         "filename" : "de_carbon_Intensity_2024_15min.csv",
         "high_CI_threshold" : 400
     },
+  
+    "cluster" : {
+        "cluster_name" : "GRID",
+        "inventory_csv" : "data/cluster/e-machinegroups_inventory_GRID.csv",
+        "frequency_csv" : "data/cluster/f-frequency_dependence.csv",
+        "strict" : false
+    }
 
     "jobs" : {
         "initial_mix" : {
             "ATLAS" : 40000,
             "LHCb" : 10000
         },
-
         "regular_incoming_mix" : {},
-
         "incoming_timestep" : 3600
     },
 
