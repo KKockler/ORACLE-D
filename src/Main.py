@@ -22,15 +22,50 @@
 # ========================================================================
 
 from simulation.Simulation import Simulation
+from cluster.ClusterLoader import load_cluster_inventory
 from util import Logging
+import json
+import os
+import logging
 
 
 logger = Logging.get_logger()
 
 if __name__ == '__main__':
-    Logging.configure_logger(logger)
-    sim = Simulation()
+    project_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+    with open(project_dir + '/config.json') as f:
+        config = json.load(f)
+
+
+    inventory = load_cluster_inventory(
+            config["cluster"]["inventory_csv"],
+            config["cluster"]["frequency_csv"],
+            cluster_name = config["cluster"]["cluster_name"],
+            strict = config["cluster"]["strict"],
+        )
+
+    output_cfg = config.setdefault("output", {})
+    verbosity_raw = output_cfg.get("verbosity")
+    config["output"]["verbosity"] = Logging.normalize_verbosity(verbosity_raw)
+
+    if config["output"].get("debug", False):
+        logging_level = logging.DEBUG
+    else:
+        logging_level = logging.INFO
+
+    run_dir = Logging.create_run_directory(config)
+    with open(os.path.join(run_dir, 'config.json'), 'w') as outfile:
+        json.dump(config, outfile, indent=4)
+        outfile.write('\n')
+
+    Logging.configure_logger(logger, logging_level, run_dir)
+    logger.info(f'Writing run output to {run_dir}')
+
+    if verbosity_raw != config["output"]["verbosity"]:
+        logger.warning(f"Invalid verbosity value '{verbosity_raw}', defaulting to 'high'")
+
+    sim = Simulation(config, inventory)
+
     sim.start()
     #sim2 = Simulation('eveningclock') # Clock down the node at 5pm and up at 9pm
     #sim2.start()
-
