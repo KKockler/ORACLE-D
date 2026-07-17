@@ -15,10 +15,21 @@ logger = Logging.get_logger()
 
 class SimulationTime():
 
-    def __init__(self, time = None):
+    def __init__(self, config_or_time, time = None):
         self._time = None
         self._start_time = None
         self._timestep_seconds = 600
+
+        # Backward compatible signatures:
+        # - SimulationTime(config, time)
+        # - SimulationTime(time_string)
+        if isinstance(config_or_time, dict):
+            config = config_or_time
+            self._verbosity = config.get("output", {}).get("verbosity", "high")
+        else:
+            config = None
+            self._verbosity = "high"
+            time = config_or_time if time is None else time
 
         if time is None:
             self.set_to_current_time()
@@ -28,7 +39,9 @@ class SimulationTime():
         self._start_time = self._time
         
         self._origin = datetime.now()
-        logger.info(f'Set origin: {self._origin}')
+
+        if self._verbosity in ["high", "medium", "low"]:
+            logger.info(f'Set origin: {self._origin}')
 
 
     def set_to_current_time(self):
@@ -38,7 +51,8 @@ class SimulationTime():
 
     def set_to_time(self, time):
         self._time = time
-        logger.info(f'Set to time: {self._time}')
+        if self._verbosity in ["high", "medium"]:
+            logger.info(f'Set to time: {self._time}')
     
     
     def find_hh_segment(self, dt, instruction = 'current'):
