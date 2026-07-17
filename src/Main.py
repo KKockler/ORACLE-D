@@ -43,7 +43,14 @@ if __name__ == '__main__':
         logging_level = logging.DEBUG
     else:
         logging_level = logging.INFO
-    Logging.configure_logger(logger, logging_level)
+
+    run_dir = Logging.create_run_directory(config)
+    with open(os.path.join(run_dir, 'config.json'), 'w') as outfile:
+        json.dump(config, outfile, indent=4)
+        outfile.write('\n')
+
+    Logging.configure_logger(logger, logging_level, run_dir)
+    logger.info(f'Writing run output to {run_dir}')
 
     if verbosity_raw != config["output"]["verbosity"]:
         logger.warning(f"Invalid verbosity value '{verbosity_raw}', defaulting to 'high'")

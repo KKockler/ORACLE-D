@@ -8,6 +8,7 @@
 # ===========================================================================
 
 import sys
+import os
 from datetime import datetime, timedelta
 
 from cluster.Cluster import Cluster
@@ -144,8 +145,97 @@ class Simulation():
         print ()
         
         if self._verbosity in ["low", "medium", "high"]:
-            logger.info('Created simulation')
+            simulation_parameters = self._get_simulation_parameters(datapath, datafile)
+            self._datalogger.set_simulation_parameters(simulation_parameters)
+            simulation_parameters_text = self._format_simulation_parameters(simulation_parameters)
+            logger.info('Created simulation with parameters:\n%s', simulation_parameters_text)
+            self._write_simulation_parameters(simulation_parameters_text)
         print(f'Simulation Started. Good Luck')
+
+
+    def _write_simulation_parameters(self, simulation_parameters):
+        run_dir = self._datalogger._run_dir
+        if run_dir:
+            with open(os.path.join(run_dir, 'parameters.txt'), 'w') as outfile:
+                outfile.write(simulation_parameters)
+                outfile.write('\n')
+
+
+    def _get_simulation_parameters(self, carbon_data_path, carbon_data_file):
+        cluster_inventory = {}
+        for node, quantity in self._cluster._worker_node_inventory.items():
+            worker_node = node(self._simulation_time)
+            cluster_inventory[worker_node.hostname] = quantity
+
+        regular_jobs = []
+        if self._jobScheduler._regular_incoming_jobs:
+            regular_jobs = [
+                {
+                    "job_mix": job_mix,
+                    "incoming_timestep_seconds": secs,
+                }
+                for job_mix, secs in self._jobScheduler._regular_incoming_jobs
+            ]
+
+        return {
+            "start_time": str(self._simulation_time.get_start_datetime()),
+            "max_end_time": str(self._simulation_time.get_start_datetime() + timedelta(seconds=self._simulation_length)),
+            "simulation_length_seconds": self._simulation_length,
+            "timestep_seconds": self._simulation_time.get_timestep(),
+            "savings_policy": self._cluster._energy_saving_try,
+            "carbon_intensity": {
+                "file": f'{carbon_data_path}{carbon_data_file}',
+                "segments": {
+                    "start": self.datastart_str,
+                    "end": self.datafinal_str,
+                },
+                "high_CI_threshold": self.CIThresholdValue,
+            },
+            "cluster": {
+                "worker_nodes": self._cluster.get_number_of_nodes(),
+                "worker_cores": self._cluster.get_number_of_cores(),
+                "worker_node_inventory": cluster_inventory,
+            },
+            "jobs": {
+                "initial": self._jobScheduler._inital_job_mix,
+                "regular_incoming": regular_jobs,
+            },
+        }
+
+
+    def _format_simulation_parameters(self, simulation_parameters):
+        carbon_intensity = simulation_parameters["carbon_intensity"]
+        cluster = simulation_parameters["cluster"]
+        jobs = simulation_parameters["jobs"]
+        regular_jobs = 'none'
+        if jobs["regular_incoming"]:
+            regular_jobs = ', '.join(
+                f'{vo}: {count} per {regular_job["incoming_timestep_seconds"]} seconds'
+                for regular_job in jobs["regular_incoming"]
+                for vo, count in regular_job["job_mix"].items()
+            )
+
+        return '\n'.join([
+            f'  start_time: {simulation_parameters["start_time"]}',
+            f'  max_end_time: {simulation_parameters["max_end_time"]}',
+            f'  simulation_length_seconds: {simulation_parameters["simulation_length_seconds"]}',
+            f'  timestep_seconds: {simulation_parameters["timestep_seconds"]}',
+            f'  savings_policy: {simulation_parameters["savings_policy"]}',
+            f'  carbon_intensity_file: {carbon_intensity["file"]}',
+            f'  carbon_intensity_segments: {carbon_intensity["segments"]["start"]} to {carbon_intensity["segments"]["end"]}',
+            f'  high_CI_threshold: {carbon_intensity["high_CI_threshold"]}',
+            f'  worker_nodes: {cluster["worker_nodes"]}',
+            f'  worker_cores: {cluster["worker_cores"]}',
+            f'  worker_node_inventory: {self._format_job_mix(cluster["worker_node_inventory"])}',
+            f'  initial_jobs: {self._format_job_mix(jobs["initial"])}',
+            f'  regular_incoming_jobs: {regular_jobs}',
+        ])
+
+
+    def _format_job_mix(self, job_mix):
+        if not job_mix:
+            return 'none'
+        return ', '.join(f'{vo}: {jobs}' for vo, jobs in job_mix.items())
 
 
     def start(self):
