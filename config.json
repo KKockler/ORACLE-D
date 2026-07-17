@@ -11,7 +11,7 @@
         "filename" : "de_carbon_Intensity_2024_15min.csv",
         "high_CI_threshold" : 400
     },
-
+  
     "cluster" : {
         "cluster_name" : "GRID",
         "inventory_csv" : "data/cluster/e-machinegroups_inventory_GRID.csv",
@@ -19,4 +19,19 @@
         "strict" : false
     }
 
+    "jobs" : {
+        "initial_mix" : {
+            "ATLAS" : 40000,
+            "LHCb" : 10000
+        },
+        "regular_incoming_mix" : {},
+        "incoming_timestep" : 3600
+    },
+
+    "output" : {
+        "verbosity" : "medium",
+        "debug" : false,
+        "log_dir" : "logs/runs",
+        "run_label" : "RF20PMTest-50000LHCJobs-Base"
+    }
 }

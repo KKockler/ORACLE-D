@@ -20,7 +20,7 @@ logger = Logging.get_logger()
 
 class Cluster():
 
-    def __init__(self, simulation_time, worker_node_inventory, C_Intensity_data, esgimmick, C_Intensity_Threshold_Value = 200):
+    def __init__(self, config, simulation_time, worker_node_inventory, C_Intensity_data, esgimmick, C_Intensity_Threshold_Value = 200):
         ''' Creates the cluster to be simulated. 
         The first argument (simulation_time) is the common simulation time.  
         The second argument (worker_node_inventory) a dictionary of {WorkerNode:int, ...} where user specifies node type that will become the class Workernode() and the number of those nodes.
@@ -54,6 +54,8 @@ class Cluster():
   
         self._mission_accomplished = False # State of completion for the simulation. 
         self._worker_node_inventory = worker_node_inventory
+
+        self._verbosity = config["output"]["verbosity"]
 		
         # Create worker nodes from specifications. 
         for node, quantity in worker_node_inventory.items():
@@ -61,7 +63,8 @@ class Cluster():
                 # Adds quantity number of nodes you have specified in the Simulation.
                 self._worker_nodes.append(node(self._simulation_time, f'-{node_number+1:03}'))
 
-        logger.info(f'Created cluster with {self.get_number_of_nodes()} worker nodes and {self.get_number_of_cores()} cores')
+        if self._verbosity in ["high", "medium"]:
+            logger.info(f'Created cluster with {self.get_number_of_nodes()} worker nodes and {self.get_number_of_cores()} cores')
 
 
     def set_datalogger_handlers(self, job_submitted, job_started, job_finished, energy_and_carbon_consumed, peaktime_energy_and_carbon_consumed, occupancy):

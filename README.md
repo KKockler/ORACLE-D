@@ -87,8 +87,33 @@ The parameters that define information on the carbon intensity. They include:
 | high_CI_threshold   | The threshold of what is considered a high carbon intensity in gCO2e/kWh | 
 
 ### jobs
+In this part of the config, the type of jobs that the simpulation will run are specified. The relevant parameters are:
 
-TODO
+| Variables to edit  | Description |
+| :------------: | :------ |
+| initial_mix          | The initial mix of jobs submitted to the cluster. The format is a dictionary with the type of jobs as key and the number as value. Currently implemented are the jobtypes "ATLAS", "LHCb" and "GridPP". With any other name, a basic job will be run. |
+| regular_incoming_mix   | A mix of jobs that gets submitted at regular intervals. The format is the same as initial_mix. If left empty, no jobs will be refilled. | 
+| incoming_timestep   | The timestep between job submissions | 
+
+### output
+This part controls how much information is written to the logfile in the `logs/` directory.
+
+| Variables to edit  | Description |
+| :------------: | :------ |
+| verbosity | Controls INFO-level logging detail. Valid values are `"low"`, `"medium"`, and `"high"`. |
+| debug | Controls the logging level. If set to true, debug messages are logged alongside information, warnings and errors. |
+| log_dir | Optional. Directory where per-run log folders are written. Defaults to `logs/runs`. |
+| run_label | Optional. Human-readable label added to the run folder name. If omitted, the label is generated from the number of initial jobs and the savings policy. |
+
+Each simulation run creates a folder named like `YYYY-MM-DD_HH-MM-SS_<run-label>` under `logs/runs/`. The folder contains `simulation.log`, `summary.txt`, `summary.json`, `parameters.txt`, and a copy of the run `config.json`.
+The `summary.json` file contains both the simulation parameters and the final summary metrics for machine-readable comparisons between runs.
+
+Verbosity behavior:
+- `low`: only high-level lifecycle messages (for example simulation creation) are logged.
+- `medium`: includes major progress messages (for example loading data and simulation end-condition messages).
+- `high`: includes the most detailed INFO logs, including per-job start/finish entries from the data logger.
+
+If `output.verbosity` is not one of `low`, `medium`, or `high`, ORACLE-D logs a warning and defaults to `high`.
 
 ### cluster
 
@@ -163,4 +188,3 @@ The measurements used here to catagorise the different types of server come from
 The carbon intensity data for the UK is taken from the [UK National Grid ESO](https://www.nationalgrideso.com/data-portal/national-carbon-intensity-forecast/national_carbon_intensity_forecast) interpolated to fill in gaps in the data and can be downloaded from [here](https://www.nationalgrideso.com/data-portal/national-carbon-intensity-forecast/national_carbon_intensity_forecast) and for Germany is taken from [Agorameter](https://www.agora-energiewende.de/daten-tools/agorameter) and [Green Grid Compass](https://www.greengrid-compass.eu/).
 
 This code was partially written for the RF2.0 project that has received funding from the European Union’s Horizon Europe research and innovation programme under grant agreement No. 101131850 and from the Swiss State Secretariat for Education Research and Innovation (SERI)
-
