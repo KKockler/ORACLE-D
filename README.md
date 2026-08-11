@@ -57,6 +57,14 @@ python3 -m pip install --upgrade pip
 python3 -m pip install -r requirements.txt
 ```
 
+### Running tests
+The integration tests use `pytest` and small fixture data under `tests/fixtures`.
+To install the test dependencies and run the suite:
+```
+python3 -m pip install -e ".[test]"
+python3 -m pytest
+```
+
 ## Getting started with the first run
 To run this simulation in this folder type the command:
 ```
