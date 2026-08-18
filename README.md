@@ -47,7 +47,7 @@ The Simulation has two encoded end conditions
 -  Average occupancy of the cluster
 
 ### Package Dependencies
-ORACLE-D has external package requirements in requirements.txt
+ORACLE-D package metadata, supported Python version, runtime dependencies, and optional dependency groups are defined in `pyproject.toml`. The `requirements.txt` file references that project metadata for pip-based environment setup.
 
 For those that use pip and venv to manage environment, you can run these commands that creates a virtual environment called 'venv' to hold the environment needed for the project. 
 ```
