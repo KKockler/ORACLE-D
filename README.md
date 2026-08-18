@@ -70,14 +70,13 @@ To run this simulation in this folder type the command:
 ```
 python3 src/Main.py
 ```
-
 By default this reads `config.json` from the repository root. To run with a
 different configuration file, pass it explicitly:
 ```
 python3 src/Main.py --config path/to/config.json
 ```
-
 The default running mode is to run 50,000 'GridPP' jobs on the default DESY Grid compute cluster from 2024-01-16 16:00 without any special running conditions at medium verbosity. This could run for a couple of minutes and produce a log output, and the folder logs/runs/[DATE]_RF20PMTest-50000GridPP-Base with the summary of the output. The information of grid carbon intensity is taken from data/de_carbon_Intensity_2024_15min.csv. This can be compared to the folder that exists already in the folder which takes the same job mix started at the same time. If the two summaries match, this test was run successfully.
+
 
 ## Configuration
 The simulation is configured via a JSON config file. The default is `config.json`
