@@ -58,12 +58,30 @@ python3 -m pip install -r requirements.txt
 ```
 
 ### Running tests
-The integration tests use `pytest` and small fixture data under `tests/fixtures`.
-To install the test dependencies and run the suite:
+The automated tests live under `tests/` and are run with `pytest`. They use the
+small deterministic input files in `tests/fixtures/` rather than the full
+default data set, so they are intended to be quick integration checks.
+
+To install the test dependencies and run the full suite:
 ```
 python3 -m pip install -e ".[test]"
 python3 -m pytest
 ```
+
+The integration tests currently check that:
+- cluster inventory and frequency CSV files can be loaded into worker nodes;
+- `src/Main.py --config ...` accepts an explicit configuration file;
+- a minimal GridPP simulation completes and writes its run directory outputs;
+- the generated `summary.json` contains the expected metrics and preserved
+  simulation parameters.
+
+For a faster targeted run while working on the simulation path, use:
+```
+python3 -m pytest tests/integration
+```
+
+The tests create temporary run directories through pytest fixtures, so they
+should not write new output into the repository's normal `logs/runs/` directory.
 
 ## Getting started with the first run
 To run this simulation in this folder type the command:
