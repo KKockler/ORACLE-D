@@ -73,7 +73,10 @@ The integration tests currently check that:
 - `src/Main.py --config ...` accepts an explicit configuration file;
 - a minimal GridPP simulation completes and writes its run directory outputs;
 - the generated `summary.json` contains the expected metrics and preserved
-  simulation parameters.
+  simulation parameters;
+- optionally, the standard `config.json` run agrees with the reference output
+  in `tests/fixtures/default/logs/runs/test/summary.json`, ignoring only
+  wall-clock runtime fields.
 
 For a faster targeted run while working on the simulation path, use:
 ```
@@ -82,6 +85,18 @@ python3 -m pytest tests/integration
 
 The tests create temporary run directories through pytest fixtures, so they
 should not write new output into the repository's normal `logs/runs/` directory.
+The default-config reference test is optional because it is slower. It uses
+fixture copies of the default config, default cluster CSVs, carbon-intensity
+CSV, and reference output under `tests/fixtures/default/`, then writes its new
+run output to a pytest temporary directory. To include it, set:
+```
+ORACLE_D_RUN_DEFAULT_REFERENCE_TEST=1 python3 -m pytest tests/integration/test_default_config_reference.py
+```
+
+That test runs the same command as the first-run smoke test below,
+`python3 src/Main.py`, with the fixture copy of `config.json`, and compares the
+generated `summary.json` to
+`tests/fixtures/default/logs/runs/test/summary.json`.
 
 ## Getting started with the first run
 To run this simulation in this folder type the command:
