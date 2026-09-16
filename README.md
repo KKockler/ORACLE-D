@@ -70,10 +70,15 @@ python3 -m pytest
 
 The integration tests currently check that:
 - cluster inventory and frequency CSV files can be loaded into worker nodes;
+- malformed or incomplete CSV data raises an error with `strict` enabled and is logged and skipped otherwise;
 - `src/Main.py --config ...` accepts an explicit configuration file;
 - a minimal GridPP simulation completes and writes its run directory outputs;
 - the generated `summary.json` contains the expected metrics and preserved simulation parameters;
+- each savings policy (`cd`, `cdcd`, `cd1721`, `cdcd1721`, `highforecast`) produces the exactly expected total and peak-time energy and carbon values;
+- jobs from `regular_incoming_mix` are submitted at the configured interval and started when capacity allows;
 - optionally, the standard `config.json` run agrees with the reference output in `tests/fixtures/default/logs/runs/test/summary.json`, ignoring only wall-clock runtime fields.
+
+A short description of every individual test is kept in `tests/README.md`.
 
 For a faster targeted run while working on the simulation path, use:
 ```
