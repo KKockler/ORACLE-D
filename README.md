@@ -47,7 +47,7 @@ The Simulation has two encoded end conditions
 -  Average occupancy of the cluster
 
 ### Package Dependencies
-ORACLE-D has external package requirements in requirements.txt
+ORACLE-D package metadata, supported Python version, runtime dependencies, and optional dependency groups are defined in `pyproject.toml`. The `requirements.txt` file references that project metadata for pip-based environment setup.
 
 For those that use pip and venv to manage environment, you can run these commands that create a virtual environment called 'venv' to hold the environment needed for the project. 
 ```
@@ -230,4 +230,4 @@ The measurements used here to catagorise the different types of server come from
 
 The carbon intensity data for the UK is taken from the [UK National Grid ESO](https://www.nationalgrideso.com/data-portal/national-carbon-intensity-forecast/national_carbon_intensity_forecast) interpolated to fill in gaps in the data and can be downloaded from [here](https://www.nationalgrideso.com/data-portal/national-carbon-intensity-forecast/national_carbon_intensity_forecast) and for Germany is taken from [Agorameter](https://www.agora-energiewende.de/daten-tools/agorameter) and [Green Grid Compass](https://www.greengrid-compass.eu/).
 
-This code was partially written for the RF2.0 project that has received funding from the European Union’s Horizon Europe research and innovation programme under grant agreement No. 101131850 and from the Swiss State Secretariat for Education Research and Innovation (SERI)
+This code was partially written for the RF2.0 project that has received funding from the European Union’s Horizon Europe research and innovation programme under grant agreement No. 101131850 and from the Swiss State Secretariat for Education Research and Innovation (SERI). Parts of the testing suite were written with the help of codex.
